@@ -1,5 +1,6 @@
 package pack.model;
 
+import java.util.List;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -9,19 +10,19 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.OneToOne;
-import javax.persistence.SequenceGenerator;
-
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import org.springframework.stereotype.Component;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 @Component
 @Entity
 public class Person {
-	
+
 	@Id
-	@GeneratedValue(strategy=GenerationType.AUTO, generator="person_seq")
-	@SequenceGenerator(name="person_seq", sequenceName="person_seq",initialValue = 1, allocationSize = 100)
-	@Column(name="personId")
+	@GeneratedValue(strategy = GenerationType.AUTO)
+	@Column(name = "person_id")
 	private int id;
 	@Column
 	private String name;
@@ -33,26 +34,30 @@ public class Person {
 	private String phone;
 	@Column
 	private String website;
-	
-	@OneToOne(mappedBy = "personAddress",cascade=CascadeType.ALL)
-	private Address address;
-	
-	@OneToOne(mappedBy = "personCompany",cascade=CascadeType.ALL)
-	private Company company;
-	
-	public Person(){}
-	
-	
 
-	public Person(int id,String name, String username, String email, String phone, String website,Address address,Company company) {
-		this.id=id;
+	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "persons")
+	@JsonManagedReference
+	private List<Address> addresses;
+
+	@ManyToOne(cascade = CascadeType.ALL)
+	@JoinColumn(name = "company_id")
+	@JsonBackReference
+	private Company company;
+
+	public Person() {
+	}
+
+	public Person(int id, String name, String username, String email, String phone, String website,
+			List<Address> addresses, Company company) {
+		super();
+		this.id = id;
 		this.name = name;
 		this.username = username;
 		this.email = email;
 		this.phone = phone;
 		this.website = website;
-		this.address=address;
-		this.company=company;
+		this.addresses = addresses;
+		this.company = company;
 	}
 
 	public int getId() {
@@ -87,13 +92,12 @@ public class Person {
 		this.username = username;
 	}
 
-	
-	public Address getAddress() {
-		return address;
+	public List<Address> getAddresses() {
+		return addresses;
 	}
 
-	public void setAddress(Address address) {
-		this.address = address;
+	public void setAddresses(List<Address> addresses) {
+		this.addresses = addresses;
 	}
 
 	public String getPhone() {
@@ -119,7 +123,5 @@ public class Person {
 	public void setCompany(Company company) {
 		this.company = company;
 	}
-	
-	
-	
+
 }

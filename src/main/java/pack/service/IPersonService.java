@@ -3,12 +3,14 @@ package pack.service;
 import java.util.List;
 
 import pack.model.Person;
+import pack.util.CustomException;
 
 public interface IPersonService {
-	public List<Person> getPersons();
-	public Person findPersonById(int id);
-	//public Person findPersonByEmail(String email);
-	
-	//https://jsonplaceholder.typicode.com/users
-	public boolean savePersonListFromJsonplaceholder(List<Person> list);
-	}
+	public List<Person> getPersons() throws CustomException;
+
+	public Person findPersonById(int id) throws CustomException;
+
+	public void createPerson(Person person) throws CustomException;
+
+	//public void savePersonListFromJsonplaceholder(List<Person> list) throws CustomException;
+}
