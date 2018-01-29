@@ -10,10 +10,9 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 
-
 @Configuration
 @ConfigurationProperties("oracle")
-//@Primary
+// @Primary
 public class DatasourceConfig {
 	@NotNull
 	private String username;
@@ -21,7 +20,7 @@ public class DatasourceConfig {
 	private String password;
 	@NotNull
 	private String url;
-	
+
 	public void setUsername(String username) {
 		this.username = username;
 	}
@@ -40,7 +39,7 @@ public class DatasourceConfig {
 		dataSource.setUsername(username);
 		dataSource.setPassword(password);
 		dataSource.setUrl(url);
-        dataSource.setDriverClassName("oracle.jdbc.OracleDriver");
+		dataSource.setDriverClassName("oracle.jdbc.OracleDriver");
 
 		return dataSource;
 	}

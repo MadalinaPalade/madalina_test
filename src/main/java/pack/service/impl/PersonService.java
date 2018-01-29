@@ -1,59 +1,46 @@
 package pack.service.impl;
 
-import java.util.ArrayList;
 import java.util.List;
-
-import javax.annotation.PostConstruct;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import pack.model.Person;
 import pack.repository.IPersonRepository;
 import pack.service.IPersonService;
+import pack.util.CustomException;
 
 @Service
 public class PersonService implements IPersonService {
 
 	@Autowired
 	private IPersonRepository repository;
-	
-	private List<Person> personList;
-
-	@PostConstruct
-	public void init(){
-		personList=new ArrayList<>();
-	}
 
 	@Override
-	public List<Person> getPersons() {
+	public List<Person> getPersons() throws CustomException {
 		try {
-			for (Person person : repository.findAll()) {
-				personList.add(person);
-			} 
-			return personList;
+			return (List<Person>) repository.findAll();
 		} catch (Exception e) {
 			System.out.println(e.getStackTrace());
-			return java.util.Collections.emptyList();
+			throw new CustomException(e.getMessage());
 		}
 	}
 
 	@Override
-	public Person findPersonById(int id) {
-		return repository.findOne(id);
-	}
-
-//	@Override
-	//public Person findPersonByEmail(String email) {	
-//	}
-
-	@Override
-	public boolean savePersonListFromJsonplaceholder(List<Person> list) {
+	public Person findPersonById(int id) throws CustomException {
 		try {
-			repository.save(list);
-			return true;
+			return repository.findOne(id);
 		} catch (Exception e) {
-			return false;
+			System.out.println(e.getStackTrace());
+			throw new CustomException(e.getMessage());
 		}
+	}
 
+	@Override
+	public void createPerson(Person person) throws CustomException {
+		try {
+			repository.save(person);
+		} catch (Exception e) {
+			System.out.println(e.getStackTrace());
+			throw new CustomException(e.getMessage());
+		}
 	}
 }

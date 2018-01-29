@@ -3,23 +3,26 @@ package pack.model;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
-import javax.persistence.SequenceGenerator;
 
 import org.springframework.stereotype.Component;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+
 @Component
 @Entity
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "addressId")
 public class Address {
 	@Id
-	@GeneratedValue(strategy=GenerationType.AUTO, generator="address_seq")
-	@SequenceGenerator(name="address_seq", sequenceName="address_seq", initialValue = 1, allocationSize = 100)
-	private int addressId;	
+	@GeneratedValue(strategy = GenerationType.AUTO)
+	@Column(name = "address_id")
+	private int addressId;
 	@Column
 	private String street;
 	@Column
@@ -28,29 +31,16 @@ public class Address {
 	private String city;
 	@Column
 	private String zipcode;
-	
-	
-	@OneToOne(cascade=CascadeType.ALL)
-	//@JoinColumn(name = "personId", nullable = false)
-	private Person personAddress;
-	
-	@OneToOne(mappedBy = "geoAddress",cascade=CascadeType.ALL)
+
+	@ManyToOne(cascade = CascadeType.ALL)
+	@JoinColumn(name = "person_id")
+	private Person persons;
+
+	@OneToOne(cascade = CascadeType.ALL, mappedBy = "addresses")
 	private Geo geo;
 
-	public Address(){}
-	
-
-	public Address(String street, String suite, String city, String zipcode,Person personAddress,Geo geo) {
-		this.street = street;
-		this.suite = suite;
-		this.city = city;
-		this.zipcode = zipcode;
-		this.geo=geo;
-		this.personAddress=personAddress;
-		
+	public Address() {
 	}
-
-
 
 	public int getAddressId() {
 		return addressId;
@@ -92,19 +82,13 @@ public class Address {
 		this.zipcode = zipcode;
 	}
 
-	
-
-	public Person getPersonAddress() {
-		return personAddress;
+	public Person getPersons() {
+		return persons;
 	}
 
-
-
-	public void setPersonAddress(Person personAddress) {
-		this.personAddress = personAddress;
+	public void setPersons(Person persons) {
+		this.persons = persons;
 	}
-
-
 
 	public Geo getGeo() {
 		return geo;
@@ -114,6 +98,4 @@ public class Address {
 		this.geo = geo;
 	}
 
-	
-	
 }

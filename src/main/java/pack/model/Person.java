@@ -1,6 +1,6 @@
 package pack.model;
 
-
+import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -9,19 +9,20 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.OneToOne;
-import javax.persistence.SequenceGenerator;
-
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import org.springframework.stereotype.Component;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 @Component
 @Entity
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 public class Person {
-	
+
 	@Id
-	@GeneratedValue(strategy=GenerationType.AUTO, generator="person_seq")
-	@SequenceGenerator(name="person_seq", sequenceName="person_seq",initialValue = 1, allocationSize = 100)
-	@Column(name="personId")
+	@GeneratedValue(strategy = GenerationType.AUTO)
+	@Column(name = "person_id")
 	private int id;
 	@Column
 	private String name;
@@ -33,26 +34,15 @@ public class Person {
 	private String phone;
 	@Column
 	private String website;
-	
-	@OneToOne(mappedBy = "personAddress",cascade=CascadeType.ALL)
-	private Address address;
-	
-	@OneToOne(mappedBy = "personCompany",cascade=CascadeType.ALL)
-	private Company company;
-	
-	public Person(){}
-	
-	
 
-	public Person(int id,String name, String username, String email, String phone, String website,Address address,Company company) {
-		this.id=id;
-		this.name = name;
-		this.username = username;
-		this.email = email;
-		this.phone = phone;
-		this.website = website;
-		this.address=address;
-		this.company=company;
+	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "persons")
+	private List<Address> address;
+
+	@ManyToOne(cascade = CascadeType.ALL)
+	@JoinColumn(name = "company_id")
+	private Company company;
+
+	public Person() {
 	}
 
 	public int getId() {
@@ -87,12 +77,11 @@ public class Person {
 		this.username = username;
 	}
 
-	
-	public Address getAddress() {
+	public List<Address> getAddress() {
 		return address;
 	}
 
-	public void setAddress(Address address) {
+	public void setAddress(List<Address> address) {
 		this.address = address;
 	}
 
@@ -119,7 +108,5 @@ public class Person {
 	public void setCompany(Company company) {
 		this.company = company;
 	}
-	
-	
-	
+
 }

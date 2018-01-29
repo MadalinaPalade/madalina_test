@@ -9,7 +9,7 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
 @SpringBootApplication
 @EnableAutoConfiguration
-@ComponentScan(basePackages={"pack.*"})
+@ComponentScan(basePackages = { "pack.*" })
 @EntityScan("pack.model")
 @EnableJpaRepositories("pack.*")
 public class MyTestProjectApplication {

@@ -1,46 +1,35 @@
 package pack.model;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
-import javax.persistence.SequenceGenerator;
-
 import org.springframework.stereotype.Component;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 @Component
 @Entity
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "geoId")
 public class Geo {
 	@Id
-	@GeneratedValue(strategy=GenerationType.AUTO, generator="geo_seq")
-	@SequenceGenerator(name="geo_seq", sequenceName="geo_seq",initialValue = 1, allocationSize = 100)
+	@GeneratedValue(strategy = GenerationType.AUTO)
+	@Column(name = "geo_id")
 	private int geoId;
 	@Column
 	private String lat;
 	@Column
 	private String lng;
-	
-	
-	@OneToOne(cascade=CascadeType.ALL)
-	//@JoinColumn(name = "addressId", nullable = false)
-	private Geo geoAddress;
-	
-	
-	public Geo(){}
-	
 
-	public Geo(String lat, String lng, Geo geoAddress) {
-		this.lat = lat;
-		this.lng = lng;
-		this.geoAddress=geoAddress;
+	@OneToOne
+	@JoinColumn(name = "address_id")
+	private Address addresses;
+
+	public Geo() {
 	}
-
-
 
 	public int getGeoId() {
 		return geoId;
@@ -66,16 +55,12 @@ public class Geo {
 		this.lng = lng;
 	}
 
-
-	public Geo getGeoAddress() {
-		return geoAddress;
+	public Address getGeoAddresses() {
+		return addresses;
 	}
 
-
-	public void setGeoAddress(Geo geoAddress) {
-		this.geoAddress = geoAddress;
+	public void setGeoAddresses(Address addresses) {
+		this.addresses = addresses;
 	}
-	
-	
 
 }

@@ -1,5 +1,6 @@
 package pack.model;
 
+import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -7,44 +8,39 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.OneToOne;
-import javax.persistence.SequenceGenerator;
-
+import javax.persistence.OneToMany;
 import org.springframework.stereotype.Component;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 @Component
 @Entity
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "companyId")
 public class Company {
 	@Id
-	@GeneratedValue(strategy=GenerationType.AUTO, generator="company_seq")
-	@SequenceGenerator(name="company_seq", sequenceName="company_seq",initialValue = 1, allocationSize = 100)
+	@GeneratedValue(strategy = GenerationType.AUTO)
+	@Column(name = "company_id")
 	private int companyId;
 	@Column
 	private String name;
-	@Column
+	@Column(name = "catch_Phrase")
 	private String catchPhrase;
 	@Column
 	private String bs;
-	
-	
-	@OneToOne(cascade=CascadeType.ALL)
-	//@JoinColumn(name = "personId", nullable = false)
-	private Person personCompany;
-	
-	
-	public Company(){}
-	
-	
 
-	public Company(String name, String catchPhrase, String bs, Person personCompany) {
+	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "company")
+	private List<Person> persons;
+
+	public Company() {
+	}
+
+	public Company(String name, String catchPhrase, String bs, List<Person> persons) {
+		super();
 		this.name = name;
 		this.catchPhrase = catchPhrase;
 		this.bs = bs;
-		this.personCompany=personCompany;
+		this.persons = persons;
 	}
-
-
 
 	public int getCompanyId() {
 		return companyId;
@@ -78,14 +74,12 @@ public class Company {
 		this.bs = bs;
 	}
 
-	public Person getPersonCompany() {
-		return personCompany;
+	public List<Person> getPersons() {
+		return persons;
 	}
 
-	public void setPersonCompany(Person personCompany) {
-		this.personCompany = personCompany;
+	public void setPersons(List<Person> persons) {
+		this.persons = persons;
 	}
-	
-	
 
 }
