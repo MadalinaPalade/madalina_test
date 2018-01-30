@@ -13,7 +13,7 @@ import org.springframework.jdbc.datasource.DriverManagerDataSource;
 @Configuration
 @ConfigurationProperties("oracle")
 // @Primary
-public class DatasourceConfig {
+public class OracleDbConfig {
 	@NotNull
 	private String username;
 	@NotNull
