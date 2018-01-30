@@ -10,6 +10,6 @@ public interface IPersonService {
 
 	public Person findPersonById(int id) throws CustomException;
 
-	public void createPerson(Person person) throws CustomException;
+	public Person createPerson(Person person) throws CustomException;
 
 }

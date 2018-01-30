@@ -35,9 +35,10 @@ public class PersonService implements IPersonService {
 	}
 
 	@Override
-	public void createPerson(Person person) throws CustomException {
+	public Person createPerson(Person person) throws CustomException {
 		try {
 			repository.save(person);
+			return person;
 		} catch (Exception e) {
 			System.out.println(e.getStackTrace());
 			throw new CustomException(e.getMessage());

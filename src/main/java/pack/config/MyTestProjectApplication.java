@@ -13,7 +13,6 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 @EntityScan("pack.model")
 @EnableJpaRepositories("pack.*")
 public class MyTestProjectApplication {
-
 	public static void main(String[] args) {
 		SpringApplication.run(MyTestProjectApplication.class, args);
 	}
