@@ -1,5 +1,6 @@
 package pack.model;
 
+import java.io.Serializable;
 import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -15,27 +16,30 @@ import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 @Component
 @Entity
-@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "companyId")
-public class Company {
+@JsonIdentityInfo(scope = Company.class, generator = ObjectIdGenerators.PropertyGenerator.class, property = "companyId")
+public class Company implements Serializable {
+	private static final long serialVersionUID = 1L;
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	@Column(name = "company_id")
 	private int companyId;
-	@Column
+	@Column(unique = true)
 	private String name;
 	@Column(name = "catch_Phrase")
 	private String catchPhrase;
 	@Column
 	private String bs;
 
-	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "company")
+	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "company", orphanRemoval = false)
 	private List<Person> persons;
 
 	public Company() {
 	}
 
-	public Company(String name, String catchPhrase, String bs, List<Person> persons) {
+	public Company(int companyId, String name, String catchPhrase, String bs, List<Person> persons) {
 		super();
+		this.companyId = companyId;
 		this.name = name;
 		this.catchPhrase = catchPhrase;
 		this.bs = bs;

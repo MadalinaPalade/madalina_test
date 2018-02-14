@@ -1,34 +1,47 @@
 package pack.model;
 
+import java.io.Serializable;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
+import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 import org.springframework.stereotype.Component;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 @Component
 @Entity
-@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "geoId")
-public class Geo {
+@JsonIdentityInfo(scope = Geo.class, generator = ObjectIdGenerators.PropertyGenerator.class, property = "geoId")
+@Table(uniqueConstraints = { @UniqueConstraint(columnNames = { "lat", "lng" }) })
+public class Geo implements Serializable {
+
+	private static final long serialVersionUID = 1L;
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
-	@Column(name = "geo_id")
+	@Column(name = "geo_id", unique = true, nullable = false)
 	private int geoId;
 	@Column
 	private String lat;
 	@Column
 	private String lng;
 
-	@OneToOne
-	@JoinColumn(name = "address_id")
+	@OneToOne(fetch = FetchType.EAGER, mappedBy = "geo")
 	private Address addresses;
 
 	public Geo() {
+	}
+
+	public Geo(int geoId, String lat, String lng, Address addresses) {
+		super();
+		this.geoId = geoId;
+		this.lat = lat;
+		this.lng = lng;
+		this.addresses = addresses;
 	}
 
 	public int getGeoId() {

@@ -3,12 +3,15 @@ package pack.model;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
+import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 
 import org.springframework.stereotype.Component;
 
@@ -17,7 +20,8 @@ import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 @Component
 @Entity
-@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "addressId")
+@JsonIdentityInfo(scope = Address.class, generator = ObjectIdGenerators.PropertyGenerator.class, property = "addressId")
+@Table(uniqueConstraints = { @UniqueConstraint(columnNames = { "street", "suite", "city", "zipcode", "person_id" }) })
 public class Address {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
@@ -32,11 +36,12 @@ public class Address {
 	@Column
 	private String zipcode;
 
-	@ManyToOne(cascade = CascadeType.ALL)
+	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "person_id")
 	private Person persons;
 
-	@OneToOne(cascade = CascadeType.ALL, mappedBy = "addresses")
+	@OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	@JoinColumn(name = "geo_id", nullable = false, insertable = true, updatable = true)
 	private Geo geo;
 
 	public Address() {
@@ -44,6 +49,15 @@ public class Address {
 
 	public int getAddressId() {
 		return addressId;
+	}
+
+	public Address(int addressId, String street, String suite, String city, String zipcode) {
+		super();
+		this.addressId = addressId;
+		this.street = street;
+		this.suite = suite;
+		this.city = city;
+		this.zipcode = zipcode;
 	}
 
 	public void setAddressId(int addressId) {

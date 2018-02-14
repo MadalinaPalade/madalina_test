@@ -1,5 +1,6 @@
 package pack.model;
 
+import java.io.Serializable;
 import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -11,15 +12,18 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 import org.springframework.stereotype.Component;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 @Component
 @Entity
-@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
-public class Person {
-
+@JsonIdentityInfo(scope = Person.class, generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
+@Table(uniqueConstraints = { @UniqueConstraint(columnNames = { "username" }) })
+public class Person implements Serializable {
+	private static final long serialVersionUID = 1L;
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	@Column(name = "person_id")
@@ -35,14 +39,26 @@ public class Person {
 	@Column
 	private String website;
 
-	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "persons")
+	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "persons", orphanRemoval = false)
 	private List<Address> address;
 
-	@ManyToOne(cascade = CascadeType.ALL)
+	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "company_id")
 	private Company company;
 
 	public Person() {
+	}
+
+	public Person(int id, String name, String username, String email, String phone, String website,
+			List<Address> address) {
+		super();
+		this.id = id;
+		this.name = name;
+		this.username = username;
+		this.email = email;
+		this.phone = phone;
+		this.website = website;
+		this.address = address;
 	}
 
 	public int getId() {
