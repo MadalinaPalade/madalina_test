@@ -49,14 +49,6 @@ public class CompanyController {
 
 	}
 
-	@RequestMapping(value = "/getFromCache/{cacheName}", method = RequestMethod.GET, produces = "application/json")
-	@ResponseBody
-	public ResponseEntity<Response> getPersonsFromCache(@PathVariable("cacheName") String cacheName)
-			throws CustomException {
-		return new ResponseEntity<Response>(new Response().getResponse(companyService.getFromCache(cacheName)),
-				HttpStatus.OK);
-	}
-
 	@RequestMapping(value = "/findCompanyById/{id}", method = RequestMethod.GET)
 	@ResponseBody
 	public ResponseEntity<Response> findCompanyById(@PathVariable("id") int id)
@@ -79,9 +71,9 @@ public class CompanyController {
 
 	}
 
-	@RequestMapping(value = "/deleteCompany/{id}", method = RequestMethod.DELETE)
-	public ResponseEntity<Response> deleteCompany(@PathVariable("id") int id) throws CustomException {
-		return new ResponseEntity<Response>(new Response().getResponse(companyService.deleteCompany(id)),
+	@RequestMapping(value = "/deleteCompany/{name}", method = RequestMethod.DELETE)
+	public ResponseEntity<Response> deleteCompany(@PathVariable("name") String name) throws CustomException {
+		return new ResponseEntity<Response>(new Response().getResponse(companyService.deleteCompany(name)),
 				HttpStatus.OK);
 
 	}

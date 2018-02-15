@@ -7,6 +7,7 @@ import pack.model.Person;
 import pack.util.CustomException;
 
 public interface ICompanyService {
+	
 	public List<Person> getPersonsForACompany(int companyId) throws CustomException;
 
 	public Company findCompanyById(int id) throws CustomException;
@@ -15,8 +16,7 @@ public interface ICompanyService {
 
 	public Company createOrUpdateCompany(Company company) throws CustomException;
 
-	public String deleteCompany(int companyId) throws CustomException;
+	public String deleteCompany(String name) throws CustomException;
 
-	public List<Company> getFromCache(String cacheName) throws CustomException;
 
 }
